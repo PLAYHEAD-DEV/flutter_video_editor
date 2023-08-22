@@ -188,7 +188,7 @@ class VideoFFmpegVideoEditorConfig extends FFmpegVideoEditorConfig {
           ? commandBuilder!(this, "\'$videoPath\'", "\'$outputPath\'")
           // use -y option to overwrite the output
           // use -c copy if there is not filters to avoid re-encoding the video and speedup the process
-          : "$startTrimCmd -i \'$videoPath\' $toTrimCmd ${filtersCmd(filters)} $gifCmd -c:v libx264 -b:v 7.8M -maxrate 7.8M -bufsize 9M -y -c:a aac -b:a 128k -crf 23 -preset ultrafast \'$outputPath\'",
+          : "$startTrimCmd -i \'$videoPath\' $toTrimCmd ${filtersCmd(filters)} $gifCmd -c:v copy -b:v 7.8M -maxrate 7.8M -bufsize 9M -y -c:a aac -b:a 128k -crf 23 -preset ultrafast \'$outputPath\'",
       outputPath: outputPath,
     );
   }
