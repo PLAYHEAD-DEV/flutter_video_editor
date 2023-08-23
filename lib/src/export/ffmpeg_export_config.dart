@@ -84,7 +84,7 @@ abstract class FFmpegVideoEditorConfig {
   /// Returns the list of all the active filters
   List<String> getExportFilters() {
     if (!isFiltersEnabled) return [];
-    final List<String> filters = [cropCmd, rotationCmd, "scale=1080:-1"];
+    final List<String> filters = [cropCmd, rotationCmd, scaleCmd];
     filters.removeWhere((item) => item.isEmpty);
     return filters;
   }
@@ -188,7 +188,7 @@ class VideoFFmpegVideoEditorConfig extends FFmpegVideoEditorConfig {
           ? commandBuilder!(this, "\'$videoPath\'", "\'$outputPath\'")
           // use -y option to overwrite the output
           // use -c copy if there is not filters to avoid re-encoding the video and speedup the process
-          : "$startTrimCmd -i \'$videoPath\' $toTrimCmd ${filtersCmd(filters)} $gifCmd -c:v libx264 -c:a copy -crf 28 -preset:v ultrafast -pix_fmt yuv420p -movflags +faststart \'$outputPath\'",
+          : "$startTrimCmd -i \'$videoPath\' $toTrimCmd ${filtersCmd(filters)} $gifCmd ${filters.isEmpty ? '-c copy' : ''} -preset ultrafast -y \'$outputPath\'",
       outputPath: outputPath,
     );
   }
