@@ -19,6 +19,8 @@ Stream<List<Uint8List>> generateTrimThumbnails(
         imageFormat: ImageFormat.JPEG,
         video: path,
         timeMs: (eachPart * i).toInt(),
+        maxHeight: 192,
+        maxWidth: 108,
         quality: controller.trimThumbnailsQuality,
       );
       if (bytes != null) {
@@ -76,6 +78,8 @@ Future<CoverData> generateSingleCoverThumbnail(
     imageFormat: ImageFormat.JPEG,
     video: filePath,
     timeMs: timeMs,
+    maxHeight: 192,
+    maxWidth: 108,
     quality: quality,
   );
 

@@ -57,7 +57,7 @@ class TrimTimeline extends StatelessWidget {
             children: List.generate(count, (i) {
               final t = Duration(milliseconds: i * gap);
               final text =
-                  (t.inMilliseconds / 1000).toStringAsFixed(1).padLeft(2, '0');
+                  i == 0 || i == count - 1 ? '' : (t.inMilliseconds ~/ 1000);
 
               return Text(
                 '$text$localSeconds',
