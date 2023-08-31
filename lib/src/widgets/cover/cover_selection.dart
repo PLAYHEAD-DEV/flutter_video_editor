@@ -82,7 +82,8 @@ class _CoverSelectionState extends State<CoverSelection>
     _transform.value = TransformData.fromRect(
       _rect.value,
       _layout,
-      Size.square(widget.size), // the maximum size to show the thumb
+      Size(widget.size,
+          widget.size * 50 / 30), // the maximum size to show the thumb
       null, // controller rotation should not affect this widget
     );
 
@@ -177,58 +178,63 @@ class _CoverSelectionState extends State<CoverSelection>
   }) {
     // here the rotation should affect the dimension of the widget
     // it is better to use [RotatedBox] instead of [Tranform.rotate]
-    return RotatedBox(
-      quarterTurns: widget.controller.rotation ~/ -90,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(coverStyle.borderRadius),
-        onTap: () => widget.controller.updateSelectedCover(cover),
-        child: SizedBox.fromSize(
-          size: _calculateMaxLayout(),
-          child: Stack(
-            children: [
-              CropTransform(
-                transform: transform,
-                child: ImageViewer(
-                  controller: widget.controller,
-                  bytes: cover.thumbData!,
-                  child: LayoutBuilder(builder: (_, constraints) {
-                    Size size = constraints.biggest;
-                    if (_layout != size) {
-                      _layout = size;
-                      // init the widget with controller values
-                      WidgetsBinding.instance
-                          .addPostFrameCallback((_) => _scaleRect());
-                    }
+    return Container(
+      color: Colors.black,
+      width: widget.size,
+      height: widget.size * 50 / 30,
+      child: RotatedBox(
+        quarterTurns: widget.controller.rotation ~/ -90,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(coverStyle.borderRadius),
+          onTap: () => widget.controller.updateSelectedCover(cover),
+          child: SizedBox.fromSize(
+            size: _calculateMaxLayout(),
+            child: Stack(
+              children: [
+                CropTransform(
+                  transform: transform,
+                  child: ImageViewer(
+                    controller: widget.controller,
+                    bytes: cover.thumbData!,
+                    child: LayoutBuilder(builder: (_, constraints) {
+                      Size size = constraints.biggest;
+                      if (_layout != size) {
+                        _layout = size;
+                        // init the widget with controller values
+                        WidgetsBinding.instance
+                            .addPostFrameCallback((_) => _scaleRect());
+                      }
 
-                    return RepaintBoundary(
-                      child: CustomPaint(
-                        size: Size.infinite,
-                        painter: CropGridPainter(
-                          _rect.value,
-                          radius: coverStyle.borderRadius / 2,
-                          showGrid: false,
-                          style: widget.controller.cropStyle,
+                      return RepaintBoundary(
+                        child: CustomPaint(
+                          size: Size.infinite,
+                          painter: CropGridPainter(
+                            _rect.value,
+                            radius: coverStyle.borderRadius / 2,
+                            showGrid: false,
+                            style: widget.controller.cropStyle,
+                          ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    }),
+                  ),
                 ),
-              ),
-              Positioned.fill(
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    borderRadius:
-                        BorderRadius.circular(coverStyle.borderRadius),
-                    border: Border.all(
-                      color: isSelected
-                          ? coverStyle.selectedBorderColor
-                          : Colors.transparent,
-                      width: coverStyle.borderWidth,
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius:
+                          BorderRadius.circular(coverStyle.borderRadius),
+                      border: Border.all(
+                        color: isSelected
+                            ? coverStyle.selectedBorderColor
+                            : Colors.transparent,
+                        width: coverStyle.borderWidth,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
