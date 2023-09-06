@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -16,9 +17,11 @@ Stream<List<Uint8List>> generateTrimThumbnails(
 
   for (int i = 1; i <= quantity; i++) {
     try {
-      final Uint8List? bytes = await VideoThumbnail.thumbnailData(
-        video: path,
-        timeMs: (eachPart * i).toInt(),
+      final Uint8List? bytes = await VideoCompress.getByteThumbnail(
+        path,
+        position: Platform.isAndroid
+            ? (eachPart * i).toInt() * 1000
+            : (eachPart * i).toInt() ~/ 1000,
         quality: controller.trimThumbnailsQuality,
       );
       if (bytes != null) {
@@ -72,9 +75,9 @@ Future<CoverData> generateSingleCoverThumbnail(
   int timeMs = 0,
   int quality = 10,
 }) async {
-  final Uint8List? thumbData = await VideoThumbnail.thumbnailData(
-    video: filePath,
-    timeMs: timeMs,
+  final Uint8List? thumbData = await VideoCompress.getByteThumbnail(
+    filePath,
+    position: Platform.isAndroid ? timeMs * 1000 : timeMs ~/ 1000,
     quality: quality,
   );
 
