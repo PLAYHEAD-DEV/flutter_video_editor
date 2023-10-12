@@ -200,7 +200,7 @@ abstract class FFmpegVideoEditorConfig {
         outputDirectory ?? (await getTemporaryDirectory()).path;
     final String n = name ?? path.basenameWithoutExtension(filePath);
     final int epoch = DateTime.now().millisecondsSinceEpoch;
-    return "$tempPath/${n}_$epoch.${format.extension}";
+    return "$tempPath/${n}_$epoch.${format.extension}".replaceAll(' ', '');
   }
 
   /// Can be used from FFmpeg session callback, for example:
