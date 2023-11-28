@@ -41,7 +41,7 @@ class OverlayCoverSelection extends StatefulWidget {
   /// the `children` param will be ommited
   final Wrap? wrap;
 
-  final String overlay;
+  final String? overlay;
 
   /// Returns how the selected cover should be displayed
   final Widget Function(Widget selectedCover, Size)? selectedCoverBuilder;
@@ -246,7 +246,12 @@ class _OverlayCoverSelectionState extends State<OverlayCoverSelection>
               ),
             ),
           ),
-          IgnorePointer(child: Image.file(File(widget.overlay))),
+          SizedBox.fromSize(
+              size: _calculateMaxLayout(),
+              child: IgnorePointer(
+                  child: widget.overlay != null
+                      ? Image.file(File(widget.overlay!))
+                      : Container())),
         ],
       ),
     );
